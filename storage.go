@@ -27,7 +27,10 @@ func LoadVault(path string) (*Vault, error) {
 		return &Vault{}, err
 	}
 	loaded_entries := make(map[string]Entry)
-	err = json.Unmarshal(data, loaded_entries)
+	err = json.Unmarshal(data, &loaded_entries)
+	if err != nil {
+		return &Vault{}, err
+	}
 
 	return &Vault{entries: loaded_entries}, nil
 }
