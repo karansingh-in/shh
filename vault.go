@@ -15,12 +15,13 @@ type Entry struct {
 // hashmap for entries
 type Vault struct {
 	entries map[string]Entry
+	salt    []byte
 }
 
 // constructor for the data structure
-func NewVault() *Vault {
+func NewVault(salt []byte) *Vault {
 	return &Vault{
-		make(map[string]Entry),
+		make(map[string]Entry), salt,
 	}
 }
 
