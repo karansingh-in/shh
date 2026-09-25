@@ -171,12 +171,7 @@ func cmdDelete(args []string) error {
 		return err
 	}
 
-	entry, err := v.Get(name)
-	if err != nil {
-		return err
-	}
-
-	if err := v.Delete(entry); err != nil {
+	if err := v.Delete(name); err != nil {
 		return err
 	}
 
