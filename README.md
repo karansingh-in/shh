@@ -22,7 +22,7 @@ Most password managers and note apps either phone home to a server or trust you 
 Requires [Go 1.21+](https://go.dev/dl/).
 
 ```bash
-git clone https://github.com/<your-username>/shh.git
+git clone https://github.com/karansingh-in/shh.git
 cd shh
 go build -o shh
 ```
