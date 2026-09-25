@@ -55,6 +55,26 @@ func promptLine(prompt string) (string, error) {
 	return input, nil
 }
 
+func promptMultiline(prompt string) (string, error) {
+	fmt.Println(prompt)
+	fmt.Println("(type END on its own line to finish)")
+
+	var lines []string
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if line == "END" {
+			break
+		}
+		lines = append(lines, line)
+	}
+	if err := scanner.Err(); err != nil {
+		return "", err
+	}
+
+	return strings.Join(lines, "\n"), nil
+}
+
 func cmdAdd(args []string) error {
 	password, err := promptPassword("Master password: ")
 	if err != nil {
@@ -73,7 +93,7 @@ func cmdAdd(args []string) error {
 		return err
 	}
 
-	body, err := promptLine("Body: ")
+	body, err := promptMultiline("Body: ")
 	if err != nil {
 		return err
 	}
@@ -209,7 +229,7 @@ func cmdUpdate(args []string) error {
 		return err
 	}
 
-	body, err := promptLine("New body: ")
+	body, err := promptMultiline("New body: ")
 	if err != nil {
 		return err
 	}
@@ -248,6 +268,10 @@ func main() {
 		err = cmdDelete(args)
 	case "update":
 		err = cmdUpdate(args)
+	case "encrypt":
+		err = cmdEncryptFile(args)
+	case "decrypt":
+		err = cmdDecryptFile(args)
 	default:
 		fmt.Println("unknown command:", command)
 		os.Exit(1)
