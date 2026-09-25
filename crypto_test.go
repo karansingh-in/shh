@@ -68,3 +68,45 @@ func TestDecryptWrongKey(t *testing.T) {
 		t.Error("expected decryption with wrong key to fail, but it succeeded")
 	}
 }
+
+func TestSaveLoadVaultRoundTrip(t *testing.T) {
+	path := "test_vault.enc"
+
+	password := []byte("my real password")
+
+	// first run: file doesn't exist yet
+	v, err := LoadVault(password, path)
+	if err != nil {
+		t.Fatalf("file not found: %v", err)
+	}
+
+	entry := Entry{Name: "test entry", Body: "some journal content"}
+	if err := v.Add(entry); err != nil {
+		t.Fatalf("add failed: %v", err)
+	}
+
+	if err := SaveVault(v, password, path); err != nil {
+		t.Fatalf("save failed: %v", err)
+	}
+
+	// load it back with the correct password
+	loaded, err := LoadVault(password, path)
+	if err != nil {
+		t.Fatalf("load with correct password failed: %v", err)
+	}
+
+	got, err := loaded.Get("test entry")
+	if err != nil {
+		t.Fatalf("entry missing after reload: %v", err)
+	}
+	if got.Body != entry.Body {
+		t.Errorf("body mismatch: expected %q, got %q", entry.Body, got.Body)
+	}
+
+	// checking access with a WRONG password
+	wrongPassword := []byte("not the real password")
+	_, err = LoadVault(wrongPassword, path)
+	if err == nil {
+		t.Error("expected error loading with wrong password, got nil")
+	}
+}
