@@ -35,13 +35,12 @@ func (v *Vault) Add(e Entry) error {
 	return nil
 }
 
-func (v *Vault) Delete(e Entry) error {
-	// check if the file exists before deleting it
-	_, exists := v.entries[e.Name]
-	if !exists {
+func (v *Vault) Delete(name string) error {
+	// check if file exists before deleting
+	if _, exists := v.entries[name]; !exists {
 		return fmt.Errorf("the file does not exist")
 	}
-	delete(v.entries, e.Name)
+	delete(v.entries, name)
 	return nil
 }
 
