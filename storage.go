@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 )
 
@@ -35,6 +36,9 @@ func SaveVault(v *Vault, password []byte, path string) error {
 func LoadVault(password []byte, path string) (*Vault, error) {
 	// reading the file
 	data, err := os.ReadFile(path)
+	if len(data) < saltSize+nonceSize {
+		return nil, fmt.Errorf("file is too small to be a valid .shh encrypted file")
+	}
 	if err != nil {
 		// if the error says that file doesn't exist, then create a new vault
 		if os.IsNotExist(err) {
