@@ -2,6 +2,7 @@ package main
 
 import (
 	bytes "bytes"
+	"fmt"
 	testing "testing"
 )
 
@@ -22,5 +23,28 @@ func TestDeriveKey(t *testing.T) {
 	}
 	if bytes.Equal(key1, key3) {
 		t.Error("different salts should produce different keys")
+	}
+}
+
+func TestEncryptDecrypt(t *testing.T) {
+	password := []byte("my password")
+	salt1 := []byte("my salt")
+	plaintext1 := "this is the plaintext"
+
+	key1 := DeriveKey(password, salt1)
+
+	ciphertext, nonce, err := Encrypt(key1, []byte(plaintext1))
+	if err != nil {
+		t.Errorf("encryption failed: %v", err)
+	}
+	fmt.Printf("%s", ciphertext)
+	fmt.Printf("%s", nonce)
+
+	plaintext2, err := Decrypt(key1, nonce, ciphertext)
+	if err != nil {
+		t.Errorf("decryption failed: %v", err)
+	}
+	if !bytes.Equal([]byte(plaintext1), plaintext2) {
+		t.Errorf("files do not match after encryption decryption")
 	}
 }
