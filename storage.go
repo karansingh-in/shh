@@ -5,32 +5,66 @@ import (
 	"os"
 )
 
-func SaveVault(v *Vault, path string) error {
-	// converting go's structure to json file
+const saltSize = 32
+const nonceSize = 12
+
+func SaveVault(v *Vault, password []byte, path string) error {
+	// converting go structure to json file
 	data, err := json.Marshal(v.entries)
 	if err != nil {
 		return err
 	}
-	os.WriteFile(path, data, 0600)
-	return nil
+
+	// deriving key and encryption the json data using master password and stored salt
+	key := DeriveKey(password, v.salt)
+
+	ciphertext, nonce, err := Encrypt(key, data)
+	if err != nil {
+		return err
+	}
+
+	var metadata []byte
+	metadata = append(metadata, v.salt...)
+	metadata = append(metadata, nonce...)
+	metadata = append(metadata, ciphertext...)
+
+	return os.WriteFile(path, metadata, 0600)
+
 }
 
-func LoadVault(path string) (*Vault, error) {
+func LoadVault(password []byte, path string) (*Vault, error) {
 	// reading the file
 	data, err := os.ReadFile(path)
 	if err != nil {
 		// if the error says that file doesn't exist, then create a new vault
 		if os.IsNotExist(err) {
-			return NewVault(), nil
+			// if file doesn't exist make a new file with a new salt
+			newSalt, err := GenerateSalt()
+			if err != nil {
+				return nil, err
+			}
+			return &Vault{entries: make(map[string]Entry), salt: newSalt}, nil
+
 		}
 		// else show the error message
-		return &Vault{}, err
-	}
-	loaded_entries := make(map[string]Entry)
-	err = json.Unmarshal(data, &loaded_entries)
-	if err != nil {
-		return &Vault{}, err
+		return nil, err
 	}
 
-	return &Vault{entries: loaded_entries}, nil
+	salt := data[:saltSize]
+	nonce := data[saltSize : saltSize+nonceSize]
+	ciphertext := data[saltSize+nonceSize:]
+
+	key := DeriveKey(password, salt)
+
+	plaintext, err := Decrypt(key, nonce, ciphertext)
+	if err != nil {
+		return nil, err
+	}
+
+	entries := make(map[string]Entry)
+	if err := json.Unmarshal(plaintext, &entries); err != nil {
+		return nil, err
+	}
+
+	return &Vault{entries: entries, salt: salt}, nil
 }
