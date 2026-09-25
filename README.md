@@ -43,16 +43,16 @@ GOOS=linux GOARCH=amd64 go build -o shh
 ```
 
 ## Usage
-
+for windows
 ```bash
-shh add                    # add a new journal entry
-shh get <name>              # view an entry
-shh list                    # list all entry names
-shh update <name>           # edit an entry's body
-shh delete <name>           # delete an entry
+./shh.exe add                    # add a new journal entry
+./shh.exe get <name>              # view an entry
+./shh.exe list                    # list all entry names
+./shh.exe update <name>           # edit an entry's body
+./shh.exe delete <name>           # delete an entry
 
-shh encrypt <path>          # encrypt any file → <path>.shh
-shh decrypt <path>.shh      # decrypt it back
+./shh.exe encrypt <path>          # encrypt any file → <path>.shh
+./shh.exe decrypt <path>.shh      # decrypt it back
 ```
 
 Every command prompts for your master password (hidden input, not echoed to the terminal). Your vault lives at `~/.shh/vault`.
