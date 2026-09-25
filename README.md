@@ -77,4 +77,4 @@ This is a personal tool built to actually understand the cryptography involved, 
 
 ## License
 
-MIT (or pick your own — up to you)
+MIT
