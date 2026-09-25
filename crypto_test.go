@@ -48,3 +48,23 @@ func TestEncryptDecrypt(t *testing.T) {
 		t.Errorf("files do not match after encryption decryption")
 	}
 }
+
+func TestDecryptWrongKey(t *testing.T) {
+	password := []byte("my password")
+	wrongPassword := []byte("not my password")
+	salt := []byte("my salt")
+	plaintext := "this is the plaintext"
+
+	key := DeriveKey(password, salt)
+	wrongKey := DeriveKey(wrongPassword, salt)
+
+	ciphertext, nonce, err := Encrypt(key, []byte(plaintext))
+	if err != nil {
+		t.Fatalf("encryption failed: %v", err)
+	}
+
+	_, err = Decrypt(wrongKey, nonce, ciphertext)
+	if err == nil {
+		t.Error("expected decryption with wrong key to fail, but it succeeded")
+	}
+}
