@@ -6,23 +6,28 @@ import (
 )
 
 func SaveVault(v *Vault, path string) error {
-	data, err := json.Marshal(v.secrets)
+	// converting go's structure to json file
+	data, err := json.Marshal(v.entries)
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(path, data, 0600)
+	os.WriteFile(path, data, 0600)
+	return nil
 }
 
 func LoadVault(path string) (*Vault, error) {
+	// reading the file
 	data, err := os.ReadFile(path)
 	if err != nil {
+		// if the error says that file doesn't exist, then create a new vault
 		if os.IsNotExist(err) {
 			return NewVault(), nil
 		}
-		return nil, err
+		// else show the error message
+		return &Vault{}, err
 	}
-	secrets := make(map[string]Secret)
-	err = json.Unmarshal(data, &secrets)
+	loaded_entries := make(map[string]Entry)
+	err = json.Unmarshal(data, loaded_entries)
 
-	return &Vault{secrets: secrets}, nil
+	return &Vault{entries: loaded_entries}, nil
 }
