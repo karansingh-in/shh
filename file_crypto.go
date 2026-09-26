@@ -8,7 +8,7 @@ import (
 
 func cmdEncryptFile(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: shh encrypt <path>")
+		return fmt.Errorf("usage: v3il encrypt <path>")
 	}
 	filePath := args[0]
 
@@ -39,7 +39,7 @@ func cmdEncryptFile(args []string) error {
 	out = append(out, nonce...)
 	out = append(out, ciphertext...)
 
-	outPath := filePath + ".shh"
+	outPath := filePath + ".v3il"
 	if err := os.WriteFile(outPath, out, 0600); err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func cmdEncryptFile(args []string) error {
 
 func cmdDecryptFile(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: shh decrypt <path>")
+		return fmt.Errorf("usage: v3il decrypt <path>")
 	}
 	filePath := args[0]
 
@@ -59,7 +59,7 @@ func cmdDecryptFile(args []string) error {
 		return err
 	}
 	if len(data) < saltSize+nonceSize {
-		return fmt.Errorf("file is too small to be a valid .shh encrypted file")
+		return fmt.Errorf("file is too small to be a valid .v3il encrypted file")
 	}
 	password, err := promptPassword("Master password: ")
 	if err != nil {
@@ -77,7 +77,7 @@ func cmdDecryptFile(args []string) error {
 		return err
 	}
 
-	outPath := strings.TrimSuffix(filePath, ".shh")
+	outPath := strings.TrimSuffix(filePath, ".v3il")
 	if outPath == filePath {
 		outPath = filePath + ".decrypted"
 	}

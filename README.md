@@ -1,16 +1,16 @@
-# shh
+# v3il
 
 A local, encrypted personal vault for journal entries and files — CLI-based, zero cloud, zero telemetry. Your data never leaves your machine.
 
 ## Why
 
-Most password managers and note apps either phone home to a server or trust you to trust them. `shh` doesn't touch the network at all. Everything is encrypted with a key derived from your own master password and stored as a single file on disk.
+Most password managers and note apps either phone home to a server or trust you to trust them. `v3il` doesn't touch the network at all. Everything is encrypted with a key derived from your own master password and stored as a single file on disk.
 
 ## Features
 
 - **Encrypted journal vault** — add, view, update, delete, and list text entries, all encrypted at rest
 - **Multiline entries** — write real journal entries, not one-liners
-- **Arbitrary file encryption** — encrypt/decrypt any file (`shh encrypt photo.jpg`, `shh decrypt photo.jpg.shh`)
+- **Arbitrary file encryption** — encrypt/decrypt any file (`v3il encrypt photo.jpg`, `v3il decrypt photo.jpg.v3il`)
 - **Real cryptography, not hand-waved**:
   - **Argon2id** for password-based key derivation (memory-hard, resists GPU brute-forcing)
   - **AES-256-GCM** for authenticated encryption (tamper detection built in — wrong password fails loudly, not silently)
@@ -22,40 +22,40 @@ Most password managers and note apps either phone home to a server or trust you 
 Requires [Go 1.21+](https://go.dev/dl/).
 
 ```bash
-git clone https://github.com/karansingh-in/shh.git
-cd shh
-go build -o shh
+git clone https://github.com/karansingh-in/v3il.git
+cd v3il
+go build -o v3il
 ```
 
-On Windows, this produces `shh.exe`. On macOS/Linux, `shh`.
+On Windows, this produces `v3il.exe`. On macOS/Linux, `v3il`.
 
 ### Cross-compiling
 Building for a different OS than the one you're on:
 ```bash
 # Windows
-GOOS=windows GOARCH=amd64 go build -o shh.exe
+GOOS=windows GOARCH=amd64 go build -o v3il.exe
 
 # macOS
-GOOS=darwin GOARCH=amd64 go build -o shh
+GOOS=darwin GOARCH=amd64 go build -o v3il
 
 # Linux
-GOOS=linux GOARCH=amd64 go build -o shh
+GOOS=linux GOARCH=amd64 go build -o v3il
 ```
 
 ## Usage
 for windows
 ```bash
-./shh.exe add                    # add a new journal entry
-./shh.exe get <name>              # view an entry
-./shh.exe list                    # list all entry names
-./shh.exe update <name>           # edit an entry's body
-./shh.exe delete <name>           # delete an entry
+./v3il.exe add                    # add a new journal entry
+./v3il.exe get <name>              # view an entry
+./v3il.exe list                    # list all entry names
+./v3il.exe update <name>           # edit an entry's body
+./v3il.exe delete <name>           # delete an entry
 
-./shh.exe encrypt <path>          # encrypt any file → <path>.shh
-./shh.exe decrypt <path>.shh      # decrypt it back
+./v3il.exe encrypt <path>          # encrypt any file → <path>.v3il
+./v3il.exe decrypt <path>.v3il      # decrypt it back
 ```
 
-Every command prompts for your master password (hidden input, not echoed to the terminal). Your vault lives at `~/.shh/vault`.
+Every command prompts for your master password (hidden input, not echoed to the terminal). Your vault lives at `~/.v3il/vault`.
 
 ## Security model — what this protects against, and what it doesn't
 

@@ -18,7 +18,7 @@ func VaultPath() (string, error) {
 		return "", err
 	}
 
-	dir := filepath.Join(home, ".shh")
+	dir := filepath.Join(home, ".v3il")
 	err = os.MkdirAll(dir, 0700)
 	if err != nil {
 		return "", err
@@ -112,7 +112,7 @@ func cmdAdd(args []string) error {
 }
 func cmdGet(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: shh get <name>")
+		return fmt.Errorf("usage: v3il get <name>")
 	}
 
 	name := args[0]
@@ -171,7 +171,7 @@ func cmdList(args []string) error {
 
 func cmdDelete(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: shh delete <name>")
+		return fmt.Errorf("usage: v3il delete <name>")
 	}
 
 	name := args[0]
@@ -204,7 +204,7 @@ func cmdDelete(args []string) error {
 
 func cmdUpdate(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: shh update <name>")
+		return fmt.Errorf("usage: v3il update <name>")
 	}
 
 	name := args[0]
@@ -249,7 +249,7 @@ func cmdUpdate(args []string) error {
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("usage: shh <add|get|list|delete|update> [args]")
+		fmt.Println("usage: v3il <add|get|list|delete|update> [args]")
 		os.Exit(1)
 	}
 

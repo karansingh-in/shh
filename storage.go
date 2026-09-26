@@ -37,7 +37,7 @@ func LoadVault(password []byte, path string) (*Vault, error) {
 	// reading the file
 	data, err := os.ReadFile(path)
 	if len(data) < saltSize+nonceSize {
-		return nil, fmt.Errorf("file is too small to be a valid .shh encrypted file")
+		return nil, fmt.Errorf("file is too small to be a valid .v3il encrypted file")
 	}
 	if err != nil {
 		// if the error says that file doesn't exist, then create a new vault
